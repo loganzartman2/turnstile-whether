@@ -12,7 +12,7 @@ export default function App() {
   );
 
   const header = (
-    <div className="flex flex-row justify-between py-4 px-12 mb-8 border-b-black border-b-2">
+    <div className="flex md:flex-row flex-col flex-wrap justify-between py-4 px-12 mb-8 border-b-black border-b-2">
       <div className="text-2xl font-semibold">📍 Seattle, WA</div>
       <div className="flex flex-row gap-4 text-lg">
         <div>⏰</div>
@@ -23,7 +23,7 @@ export default function App() {
   );
 
   const report = (
-    <div className="flex flex-row justify-center gap-10">
+    <div className="flex md:flex-row flex-col justify-center gap-10">
       <DailyWeather />
       <DailyWeather />
     </div>
