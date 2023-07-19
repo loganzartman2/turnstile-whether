@@ -1,3 +1,5 @@
+import DailyWeather from './components/DailyWeather';
+
 export default function App() {
   const topbar = (
     <div className="flex flex-row justify-between mb-12">
@@ -19,7 +21,12 @@ export default function App() {
     </div>
   );
 
-  const report = <div>Weather report</div>;
+  const report = (
+    <div className="flex flex-row justify-center gap-10">
+      <DailyWeather />
+      <DailyWeather />
+    </div>
+  );
 
   return (
     <div className="flex flex-col m-2">
