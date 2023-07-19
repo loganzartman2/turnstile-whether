@@ -12,9 +12,10 @@ export default function App() {
   );
 
   const header = (
-    <div className="flex flex-row justify-between p-8 border-b-black border-b-2">
-      <div>Seattle, WA</div>
-      <div className="flex flex-row gap-4">
+    <div className="flex flex-row justify-between py-4 px-12 mb-8 border-b-black border-b-2">
+      <div className="text-2xl font-semibold">📍 Seattle, WA</div>
+      <div className="flex flex-row gap-4 text-lg">
+        <div>⏰</div>
         <div>Every Friday</div>
         <div>Afternoon</div>
       </div>
