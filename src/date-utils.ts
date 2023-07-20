@@ -3,6 +3,7 @@ import {
   addWeeks,
   differenceInCalendarDays,
   format,
+  parse,
   setDay,
   startOfDay,
   startOfWeek,
@@ -22,6 +23,14 @@ export const formatDay = (date: Date): string => {
     dateFormat = `'Next' EEEE 'the' do`;
   }
   return format(date, dateFormat);
+};
+
+export const parseTime = (date: Date, time: string): Date => {
+  return parse(time, 'HH:mm:ss', date);
+};
+
+export const formatTime = (date: Date): string => {
+  return format(date, 'ha');
 };
 
 export const getDayNames = () => {

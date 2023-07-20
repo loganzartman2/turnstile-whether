@@ -1,6 +1,6 @@
-import {formatDay} from '@/date-utils';
+import {currentDate, formatDay, formatTime, parseTime} from '@/date-utils';
 import {fetchDailyWeather} from '@/visualcrossing';
-import {useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import colors from 'tailwindcss/colors';
 import {
   CartesianGrid,
@@ -119,6 +119,12 @@ export default function DailyWeather({
     })();
   }, [location, date]);
 
+  const timeFormatter = useCallback((time: string) => {
+    // we use the time string instead of epoch to avoid timezone conversion
+    const date = parseTime(currentDate(), time);
+    return formatTime(date);
+  }, []);
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -127,13 +133,14 @@ export default function DailyWeather({
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={weatherData.days[0].hours}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="datetime" />
+        <XAxis dataKey="datetime" tickFormatter={timeFormatter} />
         <YAxis yAxisId="mainAxis" />
         <YAxis yAxisId="precipAxis" orientation="right" domain={[0, 0.5]} />
         <Tooltip
           animationDuration={200}
           allowEscapeViewBox={{x: true, y: true}}
           wrapperStyle={{zIndex: 100}}
+          labelFormatter={timeFormatter}
         />
         <Legend />
         <Line
