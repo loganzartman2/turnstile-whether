@@ -128,9 +128,30 @@ export default function DailyWeather({
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line type="monotone" dataKey="temp" stroke={colors.red[600]} />
-        <Line type="monotone" dataKey="humidity" stroke={colors.slate[600]} />
-        <Line type="monotone" dataKey="precip" stroke={colors.blue[600]} />
+        <Line
+          type="monotone"
+          dataKey="temp"
+          name="Temperature (°F)"
+          dot={false}
+          stroke={colors.red[600]}
+          strokeWidth={2}
+        />
+        <Line
+          type="monotone"
+          dataKey="humidity"
+          name="Humidity %"
+          dot={false}
+          stroke={colors.slate[600]}
+          strokeWidth={2}
+        />
+        <Line
+          type="monotone"
+          dataKey="precip"
+          name="Precipitation (in)"
+          dot={false}
+          stroke={colors.blue[600]}
+          strokeWidth={2}
+        />
       </LineChart>
     </ResponsiveContainer>
   );
@@ -155,7 +176,7 @@ export default function DailyWeather({
           </div>
         </div>
       </div>
-      <div className="w-[450px] h-[380px]">{plot}</div>
+      <div className="w-[450px] h-[300px]">{plot}</div>
     </div>
   );
 }
