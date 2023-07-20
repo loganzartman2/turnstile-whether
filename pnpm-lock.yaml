@@ -6,6 +6,7 @@ overrides:
 specifiers:
   '@types/react': ^18.2.14
   '@types/react-dom': ^18.2.6
+  date-fns: ^2.30.0
   parcel: ^2.9.2
   postcss: ^8.4.24
   process: ^0.11.10
@@ -18,6 +19,7 @@ specifiers:
 dependencies:
   '@types/react': 18.2.15
   '@types/react-dom': 18.2.7
+  date-fns: 2.30.0
   parcel: 2.9.3_postcss@8.4.26
   postcss: 8.4.26
   process: 0.11.10
@@ -1526,6 +1528,13 @@ packages:
   /d3-timer/3.0.1:
     resolution: {integrity: sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==}
     engines: {node: '>=12'}
+    dev: false
+
+  /date-fns/2.30.0:
+    resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
+    engines: {node: '>=0.11'}
+    dependencies:
+      '@babel/runtime': 7.22.6
     dev: false
 
   /decimal.js-light/2.5.1:

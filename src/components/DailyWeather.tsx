@@ -1,3 +1,4 @@
+import {formatDay} from '@/date-utils';
 import {
   CartesianGrid,
   Legend,
@@ -54,7 +55,7 @@ const data = [
   },
 ];
 
-export default function DailyWeather() {
+export default function DailyWeather({date}: {date: Date}) {
   const plot = (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart
@@ -86,7 +87,7 @@ export default function DailyWeather() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="text-2xl mb-3">This Friday the 15th</div>
+      <div className="text-2xl mb-3">{formatDay(date)}</div>
       <div className="flex flex-row items-center mb-6">
         <div className="text-7xl mr-2">☀️</div>
         <div className="flex flex-col">

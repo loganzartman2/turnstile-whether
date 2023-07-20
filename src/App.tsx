@@ -1,6 +1,9 @@
+import {useState} from 'react';
 import DailyWeather from './components/DailyWeather';
 
 export default function App() {
+  const [location, setLocation] = useState<string>('Seattle, WA');
+
   const topbar = (
     <div className="flex flex-row justify-between mb-12">
       <div className="uppercase text-brandPrimary font-bold">whether.io</div>
@@ -13,7 +16,7 @@ export default function App() {
 
   const header = (
     <div className="flex md:flex-row flex-col flex-wrap justify-between py-4 px-12 mb-8 border-b-black border-b-2">
-      <div className="text-2xl font-semibold">📍 Seattle, WA</div>
+      <div className="text-2xl font-semibold">📍 {location}</div>
       <div className="flex flex-row gap-4 text-lg">
         <div>⏰</div>
         <div>Every Friday</div>
@@ -24,8 +27,8 @@ export default function App() {
 
   const report = (
     <div className="flex md:flex-row flex-col justify-center gap-10">
-      <DailyWeather />
-      <DailyWeather />
+      <DailyWeather date={new Date('19 Jul 2023 19:00:00 GMT')} />
+      <DailyWeather date={new Date('26 Jul 2023 19:00:00 GMT')} />
     </div>
   );
 
