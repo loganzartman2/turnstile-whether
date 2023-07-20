@@ -11,12 +11,14 @@ export default function App() {
   const handleLocationBlur = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       (async () => {
-        const result = await fetchLocation({location: e.target.value});
-        if (result.ok) {
-          const json = await result.json();
-          setLocation(json.resolvedAddress);
-        } else {
-          setLocation('');
+        if (location !== '') {
+          const result = await fetchLocation({location: e.target.value});
+          if (result.ok) {
+            const json = await result.json();
+            setLocation(json.resolvedAddress);
+          } else {
+            setLocation('');
+          }
         }
       })();
     },
