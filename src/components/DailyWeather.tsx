@@ -58,6 +58,84 @@ const data = [
   },
 ];
 
+// https://www.visualcrossing.com/resources/documentation/weather-api/defining-icon-set-in-the-weather-api/
+const getConditionsIcon = (name: string | null): React.ReactNode => {
+  switch (name) {
+    case 'snow':
+      return <span>🌨️</span>;
+    case 'rain':
+      return <span>🌧️</span>;
+    case 'fog':
+      return <span>🌫️</span>;
+    case 'wind':
+      return <span>💨</span>;
+    case 'cloudy':
+      return <span>☁️</span>;
+    case 'partly-cloudy-day':
+    case 'partly-cloudy-night':
+      return <span>🌥️</span>;
+    case 'clear-day':
+    case 'clear-night':
+      return <span>☀️</span>;
+    default:
+      return <span>❔</span>;
+  }
+};
+
+const formatConditions = (
+  conditions: string | null,
+  temp: number | null
+): string => {
+  if (!conditions) {
+    return 'No data';
+  }
+  if (!temp) {
+    return conditions;
+  }
+  return `${conditions} ${temp.toFixed(0)}°F`;
+};
+
+// https://www.visualcrossing.com/resources/documentation/weather-api/timeline-weather-api/#:~:text=0%25%20to%20100%25-,preciptype,-%E2%80%93%20an%20array%20indicating
+const getPrecipIcon = (preciptype: string[] | null): React.ReactNode => {
+  if (!preciptype) {
+    return <span>☀️</span>;
+  }
+  if (preciptype.includes('freezingrain') || preciptype.includes('ice')) {
+    return <span>🧊</span>;
+  }
+  if (preciptype.includes('snow')) {
+    return <span>❄️</span>;
+  }
+  return <span>💧</span>;
+};
+
+const formatPrecipitation = (
+  amount: number,
+  preciptype: string[] | null
+): string => {
+  if (preciptype) {
+    const amountStr = `${amount.toFixed(2)}"`;
+    const desc = [];
+    if (preciptype.includes('freezingrain')) desc.push('freezing rain');
+    if (preciptype.includes('ice')) desc.push('ice');
+    if (preciptype.includes('snow')) desc.push('snow');
+    if (preciptype.includes('rain')) desc.push('rain');
+    return `${amountStr} ${desc.join(', ')}`;
+  } else {
+    return 'no precipitation';
+  }
+};
+
+const formatWinds = (windspeed: number | null): string => {
+  if (!windspeed) {
+    return 'no wind data';
+  }
+  if (windspeed > 0) {
+    return `winds ${windspeed.toFixed(0)} mph`;
+  }
+  return `no wind`;
+};
+
 export default function DailyWeather({
   location,
   date,
@@ -103,22 +181,23 @@ export default function DailyWeather({
   );
 
   const dayData = weatherData.days[0];
-  const conditions = `${dayData.conditions} ${dayData.temp.toFixed(0)}°F`;
-  const wind = `${dayData.windspeed.toFixed(0)} mph`;
-  const precip =
-    dayData.precip > 0
-      ? `${dayData.precip.toFixed(2)}" precipitation`
-      : 'no precipitation';
+  const conditionsIcon = getConditionsIcon(dayData.icon);
+  const conditions = formatConditions(dayData.conditions, dayData.temp);
+  const wind = formatWinds(dayData.windspeed);
+  const precipIcon = getPrecipIcon(dayData.preciptype);
+  const precip = formatPrecipitation(dayData.precip, dayData.preciptype);
 
   return (
     <div className="flex flex-col items-center">
       <div className="text-2xl mb-3">{formatDay(date)}</div>
       <div className="flex flex-row items-center mb-6">
-        <div className="text-7xl mr-2">☀️</div>
+        <div className="text-7xl mr-2">️{conditionsIcon}</div>
         <div className="flex flex-col">
           <div className="text-xl">{conditions}</div>
           <div className="text-lg">🌬️ {wind}</div>
-          <div className="text-lg">💦 {precip}</div>
+          <div className="text-lg">
+            {precipIcon} {precip}
+          </div>
         </div>
       </div>
       <div className="w-[450px] h-[380px]">{plot}</div>
