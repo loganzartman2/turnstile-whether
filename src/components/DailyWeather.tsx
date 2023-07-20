@@ -128,7 +128,8 @@ export default function DailyWeather({
       <LineChart data={weatherData.days[0].hours}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="datetime" />
-        <YAxis />
+        <YAxis yAxisId="mainAxis" />
+        <YAxis yAxisId="precipAxis" orientation="right" domain={[0, 0.5]} />
         <Tooltip
           animationDuration={200}
           allowEscapeViewBox={{x: true, y: true}}
@@ -139,6 +140,7 @@ export default function DailyWeather({
           type="monotone"
           dataKey="temp"
           name="Temperature (°F)"
+          yAxisId="mainAxis"
           dot={false}
           stroke={colors.red[600]}
           strokeWidth={2}
@@ -147,6 +149,7 @@ export default function DailyWeather({
           type="monotone"
           dataKey="humidity"
           name="Humidity %"
+          yAxisId="mainAxis"
           dot={false}
           stroke={colors.slate[600]}
           strokeWidth={2}
@@ -155,6 +158,7 @@ export default function DailyWeather({
           type="monotone"
           dataKey="precip"
           name="Precipitation (in)"
+          yAxisId="precipAxis"
           dot={false}
           stroke={colors.blue[600]}
           strokeWidth={2}
