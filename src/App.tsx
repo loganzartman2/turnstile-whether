@@ -98,9 +98,10 @@ export default function App() {
     const upcomingDates = getUpcomingDates({dayOfWeek, count: 3});
     return (
       <div className="flex md:flex-row flex-col flex-wrap justify-center gap-10">
-        {upcomingDates.map((date) => (
+        {upcomingDates.map((date, i) => (
           <DailyWeather
             key={date.toString()}
+            primary={i === 0}
             location={resolvedLocation}
             date={date}
           />

@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import clsx from 'clsx';
 
 // https://www.visualcrossing.com/resources/documentation/weather-api/defining-icon-set-in-the-weather-api/
 const getConditionsIcon = (name: string | null): React.ReactNode => {
@@ -92,9 +93,11 @@ const formatWinds = (windspeed: number | null): string => {
 };
 
 export default function DailyWeather({
+  primary,
   location,
   date,
 }: {
+  primary: boolean;
   location: string;
   date: Date;
 }) {
@@ -165,7 +168,14 @@ export default function DailyWeather({
 
   return (
     <div className="flex flex-col items-center">
-      <div className="text-2xl mb-3">{formatDay(date)}</div>
+      <div
+        className={clsx(
+          'mb-3 text-2xl font-semibold',
+          primary && 'text-brandPrimary'
+        )}
+      >
+        {formatDay(date)}
+      </div>
       <div className="flex flex-row items-center mb-6">
         <div className="text-7xl mr-2">️{conditionsIcon}</div>
         <div className="flex flex-col">
