@@ -1,7 +1,10 @@
 import {useState} from 'react';
 import DailyWeather from './components/DailyWeather';
+import {getDayNames, getUpcomingDates} from './date-utils';
 
 export default function App() {
+  const [dayOfWeek, setDayOfWeek] = useState<number>(5);
+  const [time, setTime] = useState<string>('Afternoon');
   const [location, setLocation] = useState<string>('Seattle, WA');
 
   const topbar = (
@@ -14,21 +17,43 @@ export default function App() {
     </div>
   );
 
+  const dayPicker = (
+    <select
+      value={dayOfWeek}
+      onChange={(e) => setDayOfWeek(Number.parseInt(e.target.value))}
+    >
+      {getDayNames().map((name, i) => (
+        <option key={i} value={i} label={name} />
+      ))}
+    </select>
+  );
+
+  const timePicker = (
+    <select value={time} onChange={(e) => setTime(e.target.value)}>
+      <option>Morning</option>
+      <option>Afternoon</option>
+      <option>Evening</option>
+      <option>Night</option>
+    </select>
+  );
+
   const header = (
     <div className="flex md:flex-row flex-col flex-wrap justify-between py-4 px-12 mb-8 border-b-black border-b-2">
       <div className="text-2xl font-semibold">📍 {location}</div>
       <div className="flex flex-row gap-4 text-lg">
         <div>⏰</div>
-        <div>Every Friday</div>
-        <div>Afternoon</div>
+        <div>Every {dayPicker}</div>
+        <div>{timePicker}</div>
       </div>
     </div>
   );
 
+  const upcomingDates = getUpcomingDates({dayOfWeek, count: 3});
   const report = (
     <div className="flex md:flex-row flex-col justify-center gap-10">
-      <DailyWeather date={new Date('19 Jul 2023 19:00:00 GMT')} />
-      <DailyWeather date={new Date('26 Jul 2023 19:00:00 GMT')} />
+      {upcomingDates.map((date) => (
+        <DailyWeather date={date} />
+      ))}
     </div>
   );
 
