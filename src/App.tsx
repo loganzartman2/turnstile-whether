@@ -1,11 +1,27 @@
-import {useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import DailyWeather from './components/DailyWeather';
 import {getDayNames, getUpcomingDates} from './date-utils';
+import {fetchLocation} from './visualcrossing';
 
 export default function App() {
   const [dayOfWeek, setDayOfWeek] = useState<number>(5);
   const [time, setTime] = useState<string>('Afternoon');
   const [location, setLocation] = useState<string>('Seattle, WA');
+
+  const handleLocationBlur = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      (async () => {
+        const result = await fetchLocation({location: e.target.value});
+        if (result.ok) {
+          const json = await result.json();
+          setLocation(json.resolvedAddress);
+        } else {
+          setLocation('');
+        }
+      })();
+    },
+    []
+  );
 
   const topbar = (
     <div className="flex flex-row justify-between mb-12">
@@ -15,6 +31,17 @@ export default function App() {
         <div>Sign Out</div>
       </div>
     </div>
+  );
+
+  const locationInput = (
+    <input
+      type="text"
+      value={location}
+      onChange={(e) => setLocation(e.target.value)}
+      onBlur={handleLocationBlur}
+      placeholder="Type a location"
+      className=""
+    />
   );
 
   const dayPicker = (
@@ -39,7 +66,7 @@ export default function App() {
 
   const header = (
     <div className="flex md:flex-row flex-col flex-wrap justify-between py-4 px-12 mb-8 border-b-black border-b-2">
-      <div className="text-2xl font-semibold">📍 {location}</div>
+      <div className="text-2xl font-semibold">📍 {locationInput}</div>
       <div className="flex flex-row gap-4 text-lg">
         <div>⏰</div>
         <div>Every {dayPicker}</div>

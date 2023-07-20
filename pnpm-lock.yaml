@@ -4,6 +4,7 @@ overrides:
   svgo: ^3.0.2
 
 specifiers:
+  '@types/node': ^20.4.2
   '@types/react': ^18.2.14
   '@types/react-dom': ^18.2.6
   date-fns: ^2.30.0
@@ -17,6 +18,7 @@ specifiers:
   tailwindcss: ^3.3.2
 
 dependencies:
+  '@types/node': 20.4.2
   '@types/react': 18.2.15
   '@types/react-dom': 18.2.7
   date-fns: 2.30.0
@@ -1196,6 +1198,10 @@ packages:
 
   /@types/d3-timer/3.0.0:
     resolution: {integrity: sha512-HNB/9GHqu7Fo8AQiugyJbv6ZxYz58wef0esl4Mv828w1ZKpAshw/uFWVDUcIB9KKFeFKoxS3cHY07FFgtTRZ1g==}
+    dev: false
+
+  /@types/node/20.4.2:
+    resolution: {integrity: sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==}
     dev: false
 
   /@types/prop-types/15.7.5:
