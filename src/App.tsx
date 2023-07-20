@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import DailyWeather from './components/DailyWeather';
 import {getDayNames, getUpcomingDates} from './date-utils';
 import {fetchLocation} from './visualcrossing';
@@ -6,92 +6,115 @@ import {fetchLocation} from './visualcrossing';
 export default function App() {
   const [dayOfWeek, setDayOfWeek] = useState<number>(5);
   const [time, setTime] = useState<string>('Afternoon');
-  const [location, setLocation] = useState<string>('Seattle, WA');
+  const [inputLocation, setInputLocation] = useState<string>('Seattle, WA');
+  const [resolvedLocation, setResolvedLocation] =
+    useState<string>(inputLocation);
 
-  const handleLocationBlur = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      (async () => {
-        if (location !== '') {
-          const result = await fetchLocation({location: e.target.value});
-          if (result.ok) {
-            const json = await result.json();
-            setLocation(json.resolvedAddress);
-          } else {
-            setLocation('');
-          }
+  const handleLocationBlur = useCallback((e: {target: {value: string}}) => {
+    (async () => {
+      const newLocation = e.target.value;
+      if (newLocation !== '') {
+        const result = await fetchLocation({location: newLocation});
+        if (result.ok) {
+          const json = await result.json();
+          setResolvedLocation(json.resolvedAddress);
+          setInputLocation(json.resolvedAddress);
+        } else {
+          setResolvedLocation('');
+          setInputLocation('');
         }
-      })();
-    },
+      }
+    })();
+  }, []);
+
+  const topbar = useMemo(
+    () => (
+      <div className="flex flex-row justify-between mb-12">
+        <div className="uppercase text-brandPrimary font-bold">whether.io</div>
+        <div className="flex flex-row gap-4">
+          <div>Help</div>
+          <div>Sign Out</div>
+        </div>
+      </div>
+    ),
     []
   );
 
-  const topbar = (
-    <div className="flex flex-row justify-between mb-12">
-      <div className="uppercase text-brandPrimary font-bold">whether.io</div>
-      <div className="flex flex-row gap-4">
-        <div>Help</div>
-        <div>Sign Out</div>
+  const locationInput = useMemo(
+    () => (
+      <input
+        type="text"
+        value={inputLocation}
+        onChange={(e) => setInputLocation(e.target.value)}
+        onBlur={handleLocationBlur}
+        placeholder="Type a location"
+        className=""
+      />
+    ),
+    [handleLocationBlur, inputLocation]
+  );
+
+  const dayPicker = useMemo(
+    () => (
+      <select
+        value={dayOfWeek}
+        onChange={(e) => setDayOfWeek(Number.parseInt(e.target.value))}
+      >
+        {getDayNames().map((name, i) => (
+          <option key={i} value={i} label={name} />
+        ))}
+      </select>
+    ),
+    [dayOfWeek]
+  );
+
+  const timePicker = useMemo(
+    () => (
+      <select value={time} onChange={(e) => setTime(e.target.value)}>
+        <option>Morning</option>
+        <option>Afternoon</option>
+        <option>Evening</option>
+        <option>Night</option>
+      </select>
+    ),
+    [time]
+  );
+
+  const header = useMemo(
+    () => (
+      <div className="flex md:flex-row flex-col flex-wrap justify-between py-4 px-12 mb-8 border-b-black border-b-2">
+        <div className="text-2xl font-semibold">📍 {locationInput}</div>
+        <div className="flex flex-row gap-4 text-lg">
+          <div>⏰</div>
+          <div>Every {dayPicker}</div>
+          <div>{timePicker}</div>
+        </div>
       </div>
-    </div>
+    ),
+    [dayPicker, locationInput, timePicker]
   );
 
-  const locationInput = (
-    <input
-      type="text"
-      value={location}
-      onChange={(e) => setLocation(e.target.value)}
-      onBlur={handleLocationBlur}
-      placeholder="Type a location"
-      className=""
-    />
-  );
-
-  const dayPicker = (
-    <select
-      value={dayOfWeek}
-      onChange={(e) => setDayOfWeek(Number.parseInt(e.target.value))}
-    >
-      {getDayNames().map((name, i) => (
-        <option key={i} value={i} label={name} />
-      ))}
-    </select>
-  );
-
-  const timePicker = (
-    <select value={time} onChange={(e) => setTime(e.target.value)}>
-      <option>Morning</option>
-      <option>Afternoon</option>
-      <option>Evening</option>
-      <option>Night</option>
-    </select>
-  );
-
-  const header = (
-    <div className="flex md:flex-row flex-col flex-wrap justify-between py-4 px-12 mb-8 border-b-black border-b-2">
-      <div className="text-2xl font-semibold">📍 {locationInput}</div>
-      <div className="flex flex-row gap-4 text-lg">
-        <div>⏰</div>
-        <div>Every {dayPicker}</div>
-        <div>{timePicker}</div>
+  const report = useMemo(() => {
+    const upcomingDates = getUpcomingDates({dayOfWeek, count: 3});
+    return (
+      <div className="flex md:flex-row flex-col flex-wrap justify-center gap-10">
+        {upcomingDates.map((date) => (
+          <DailyWeather
+            key={date.toString()}
+            location={resolvedLocation}
+            date={date}
+          />
+        ))}
       </div>
-    </div>
-  );
-
-  const upcomingDates = getUpcomingDates({dayOfWeek, count: 3});
-  const report = (
-    <div className="flex md:flex-row flex-col justify-center gap-10">
-      {upcomingDates.map((date) => (
-        <DailyWeather date={date} />
-      ))}
-    </div>
-  );
+    );
+  }, [dayOfWeek, resolvedLocation]);
 
   return (
     <div className="flex flex-col m-2">
       {topbar}
-      <div className="w-[900px] max-w-full m-auto">
+      <div className="w-[1000px] max-w-full m-auto">
         {header}
-        {report}
+        {resolvedLocation && report}
       </div>
     </div>
   );

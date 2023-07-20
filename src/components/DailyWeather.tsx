@@ -1,4 +1,7 @@
 import {formatDay} from '@/date-utils';
+import {fetchDailyWeather} from '@/visualcrossing';
+import {useEffect, useState} from 'react';
+import colors from 'tailwindcss/colors';
 import {
   CartesianGrid,
   Legend,
@@ -55,35 +58,57 @@ const data = [
   },
 ];
 
-export default function DailyWeather({date}: {date: Date}) {
+export default function DailyWeather({
+  location,
+  date,
+}: {
+  location: string;
+  date: Date;
+}) {
+  const [loading, setLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState<any>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    (async () => {
+      const response = await fetchDailyWeather({location, date});
+      if (response.ok) {
+        const json = await response.json();
+        console.log(json);
+        setWeatherData(json);
+        setLoading(false);
+      } else {
+        throw new Error(await response.text());
+      }
+    })();
+  }, [location, date]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   const plot = (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        width={500}
-        height={300}
-        data={data}
-        margin={{
-          top: 5,
-          right: 30,
-          left: 20,
-          bottom: 5,
-        }}
-      >
+      <LineChart width={500} height={300} data={weatherData.days[0].hours}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
+        <XAxis dataKey="datetime" />
         <YAxis />
         <Tooltip />
         <Legend />
-        <Line
-          type="monotone"
-          dataKey="pv"
-          stroke="#8884d8"
-          activeDot={{r: 8}}
-        />
-        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+        <Line type="monotone" dataKey="temp" stroke={colors.red[600]} />
+        <Line type="monotone" dataKey="humidity" stroke={colors.slate[600]} />
+        <Line type="monotone" dataKey="precip" stroke={colors.blue[600]} />
       </LineChart>
     </ResponsiveContainer>
   );
+
+  const dayData = weatherData.days[0];
+  const conditions = `${dayData.conditions} ${dayData.temp.toFixed(0)}°F`;
+  const wind = `${dayData.windspeed.toFixed(0)} mph`;
+  const precip =
+    dayData.precip > 0
+      ? `${dayData.precip.toFixed(2)}" precipitation`
+      : 'no precipitation';
 
   return (
     <div className="flex flex-col items-center">
@@ -91,12 +116,12 @@ export default function DailyWeather({date}: {date: Date}) {
       <div className="flex flex-row items-center mb-6">
         <div className="text-7xl mr-2">☀️</div>
         <div className="flex flex-col">
-          <div className="text-xl">Sunny 71°F</div>
-          <div className="text-lg">🌬️ winds 5mph</div>
-          <div className="text-lg">💦 no rain</div>
+          <div className="text-xl">{conditions}</div>
+          <div className="text-lg">🌬️ {wind}</div>
+          <div className="text-lg">💦 {precip}</div>
         </div>
       </div>
-      <div className="w-[500px] h-[380px]">{plot}</div>
+      <div className="w-[450px] h-[380px]">{plot}</div>
     </div>
   );
 }
