@@ -129,7 +129,11 @@ export default function DailyWeather({
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="datetime" />
         <YAxis />
-        <Tooltip />
+        <Tooltip
+          animationDuration={200}
+          allowEscapeViewBox={{x: true, y: true}}
+          wrapperStyle={{zIndex: 100}}
+        />
         <Legend />
         <Line
           type="monotone"
