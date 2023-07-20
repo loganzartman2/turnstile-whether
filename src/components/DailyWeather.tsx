@@ -125,7 +125,7 @@ export default function DailyWeather({
 
   const plot = (
     <ResponsiveContainer width="100%" height="100%">
-      <LineChart width={500} height={300} data={weatherData.days[0].hours}>
+      <LineChart data={weatherData.days[0].hours}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="datetime" />
         <YAxis />
@@ -171,7 +171,7 @@ export default function DailyWeather({
   const precip = formatPrecipitation(dayData.precip, dayData.preciptype);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center max-w-full">
       <div
         className={clsx(
           'mb-3 text-2xl font-semibold',
@@ -190,7 +190,7 @@ export default function DailyWeather({
           </div>
         </div>
       </div>
-      <div className="w-[450px] h-[300px]">{plot}</div>
+      <div className="w-[450px] max-w-full h-[300px]">{plot}</div>
     </div>
   );
 }

@@ -82,9 +82,9 @@ export default function App() {
 
   const header = useMemo(
     () => (
-      <div className="flex md:flex-row flex-col flex-wrap justify-between py-4 px-12 mb-8 border-b-black border-b-2">
+      <div className="flex md:flex-row flex-col flex-wrap justify-between gap-x-10 gap-y-4 py-4 md:px-12 px-2 mb-8 border-b-black border-b-2">
         <div className="text-2xl font-semibold">📍 {locationInput}</div>
-        <div className="flex flex-row gap-4 text-lg">
+        <div className="flex flex-row gap-2 text-lg">
           <div>⏰</div>
           <div>Every {dayPicker}</div>
           <div>{timePicker}</div>
