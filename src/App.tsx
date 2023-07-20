@@ -95,7 +95,7 @@ export default function App() {
   );
 
   const report = useMemo(() => {
-    const upcomingDates = getUpcomingDates({dayOfWeek, count: 3});
+    const upcomingDates = getUpcomingDates({dayOfWeek, count: 2});
     return (
       <div className="flex md:flex-row flex-col flex-wrap justify-center gap-10">
         {upcomingDates.map((date, i) => (
