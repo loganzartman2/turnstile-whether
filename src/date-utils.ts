@@ -4,6 +4,7 @@ import {
   differenceInCalendarDays,
   format,
   setDay,
+  startOfDay,
   startOfWeek,
 } from 'date-fns';
 
@@ -11,16 +12,16 @@ import {
 export const currentDate = (): Date => new Date();
 
 export const formatDay = (date: Date): string => {
-  let result = format(date, "EEEE 'the' do");
+  let dateFormat = 'EEEE MMMM do';
   const dayDifference = differenceInCalendarDays(date, currentDate());
   if (dayDifference === 0) {
-    result = `Today, ${result}`;
+    dateFormat = `'Today,' EEEE 'the' do`;
   } else if (dayDifference < 7) {
-    result = `This ${result}`;
+    dateFormat = `'This' EEEE 'the' do`;
   } else if (dayDifference < 14) {
-    result = `Next ${result}`;
+    dateFormat = `'Next' EEEE 'the' do`;
   }
-  return result;
+  return format(date, dateFormat);
 };
 
 export const getDayNames = () => {
@@ -46,5 +47,7 @@ export const getUpcomingDates = ({
   count: number;
 }) => {
   const startDate = getNextWeekday(currentDate(), dayOfWeek);
-  return Array.from({length: count}).map((_, i) => addWeeks(startDate, i));
+  return Array.from({length: count}).map((_, i) =>
+    startOfDay(addWeeks(startDate, i))
+  );
 };
