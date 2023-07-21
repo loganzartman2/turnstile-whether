@@ -30,6 +30,28 @@ import {
   formatPrecipitation,
 } from '@/conditions-utils';
 
+function Summary({weatherData}: {weatherData: any}) {
+  const dayData = weatherData.days[0];
+  const conditionsIcon = getConditionsIcon(dayData.icon);
+  const conditions = formatConditions(dayData.conditions, dayData.temp);
+  const wind = formatWinds(dayData.windspeed);
+  const precipIcon = getPrecipIcon(dayData.preciptype);
+  const precip = formatPrecipitation(dayData.precip, dayData.preciptype);
+
+  return (
+    <div className="flex flex-row items-center mb-6">
+      <div className="text-7xl mr-2">️{conditionsIcon}</div>
+      <div className="flex flex-col">
+        <div className="text-xl">{conditions}</div>
+        <div className="text-lg">🌬️ {wind}</div>
+        <div className="text-lg">
+          {precipIcon} {precip}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Plot({
   timeOfDay,
   weatherData,
@@ -166,19 +188,20 @@ export default function DailyWeather({
     })();
   }, [location, date]);
 
-  if (loading) {
-    return <div>Loading...</div>;
+  let content = <div>Loading...</div>;
+  if (!loading) {
+    content = (
+      <>
+        <Summary weatherData={weatherData} />
+        <div className="w-[450px] max-w-full h-[300px]">
+          <Plot timeOfDay={timeOfDay} weatherData={weatherData} />
+        </div>
+      </>
+    );
   }
 
-  const dayData = weatherData.days[0];
-  const conditionsIcon = getConditionsIcon(dayData.icon);
-  const conditions = formatConditions(dayData.conditions, dayData.temp);
-  const wind = formatWinds(dayData.windspeed);
-  const precipIcon = getPrecipIcon(dayData.preciptype);
-  const precip = formatPrecipitation(dayData.precip, dayData.preciptype);
-
   return (
-    <div className="flex flex-col items-center max-w-full">
+    <div className="flex flex-col items-center w-[450px] max-w-full min-h-[452px]">
       <div
         className={clsx(
           'mb-3 text-2xl font-semibold',
@@ -187,19 +210,7 @@ export default function DailyWeather({
       >
         {formatDay(date)}
       </div>
-      <div className="flex flex-row items-center mb-6">
-        <div className="text-7xl mr-2">️{conditionsIcon}</div>
-        <div className="flex flex-col">
-          <div className="text-xl">{conditions}</div>
-          <div className="text-lg">🌬️ {wind}</div>
-          <div className="text-lg">
-            {precipIcon} {precip}
-          </div>
-        </div>
-      </div>
-      <div className="w-[450px] max-w-full h-[300px]">
-        <Plot timeOfDay={timeOfDay} weatherData={weatherData} />
-      </div>
+      {content}
     </div>
   );
 }
