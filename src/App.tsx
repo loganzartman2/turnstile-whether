@@ -4,6 +4,7 @@ import {TimeOfDay, getDayNames, getUpcomingDates} from './date-utils';
 import {fetchLocation} from './visualcrossing';
 
 export default function App() {
+  const [weekOffset, setWeekOffset] = useState<number>(0);
   const [dayOfWeek, setDayOfWeek] = useState<number>(5);
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>('afternoon');
   const [inputLocation, setInputLocation] = useState<string>('Seattle, WA');
@@ -98,31 +99,45 @@ export default function App() {
   );
 
   const upcomingDates = useMemo(
-    () => getUpcomingDates({dayOfWeek, count: 2}),
-    [dayOfWeek]
+    () => getUpcomingDates({dayOfWeek, weekOffset, count: 2}),
+    [dayOfWeek, weekOffset]
   );
 
   const report = useMemo(
     () => (
-      <div className="flex md:flex-row flex-col flex-wrap justify-center gap-10">
-        {upcomingDates.map((date, i) => (
-          <DailyWeather
-            key={i}
-            primary={i === 0}
-            location={resolvedLocation}
-            date={date}
-            timeOfDay={timeOfDay}
-          />
-        ))}
+      <div className="grid grid-cols-[1fr auto 1fr] grid-rows-[auto 1fr] bottom-0">
+        <div className="col-span-3 col-start-1 md:col-span-1 md:col-start-2 md:col-end-3 row-start-1 row-end-2 flex md:flex-row flex-col flex-wrap justify-center gap-10">
+          {upcomingDates.map((date, i) => (
+            <DailyWeather
+              key={i}
+              primary={i + weekOffset === 0}
+              location={resolvedLocation}
+              date={date}
+              timeOfDay={timeOfDay}
+            />
+          ))}
+        </div>
+        <button
+          onClick={() => setWeekOffset((o) => Math.max(0, o - 1))}
+          className="fixed bottom-0 left-0 right-[50%] h-16 bg-white md:h-auto md:bg-none md:relative md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2 text-2xl"
+        >
+          ❮
+        </button>
+        <button
+          onClick={() => setWeekOffset((o) => o + 1)}
+          className="fixed bottom-0 left-[50%] right-0 h-16 bg-white md:h-auto md:bg-none md:relative md:col-start-3 md:col-end-4 md:row-start-1 md:row-end-2 text-2xl"
+        >
+          ❯
+        </button>
       </div>
     ),
-    [resolvedLocation, timeOfDay, upcomingDates]
+    [resolvedLocation, timeOfDay, upcomingDates, weekOffset]
   );
 
   return (
     <div className="flex flex-col m-2">
       {topbar}
-      <div className="w-[1000px] max-w-full m-auto">
+      <div className="w-[1000px] max-w-full m-auto pb-16">
         {header}
         {resolvedLocation && report}
       </div>

@@ -53,14 +53,16 @@ export const getNextWeekday = (date: Date, dayOfWeek: number) => {
 
 export const getUpcomingDates = ({
   dayOfWeek,
+  weekOffset = 0,
   count,
 }: {
   dayOfWeek: number;
+  weekOffset?: number;
   count: number;
 }) => {
   const startDate = getNextWeekday(currentDate(), dayOfWeek);
   return Array.from({length: count}).map((_, i) =>
-    startOfDay(addWeeks(startDate, i))
+    startOfDay(addWeeks(startDate, i + weekOffset))
   );
 };
 

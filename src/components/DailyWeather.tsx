@@ -76,7 +76,7 @@ export default function DailyWeather({
   }, [timeOfDayRange]);
 
   const data = useMemo(() => {
-    if (!weatherData?.days) {
+    if (!weatherData?.days?.[0]?.hours) {
       return null;
     }
     const today = currentDate();
