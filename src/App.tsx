@@ -97,13 +97,17 @@ export default function App() {
     [dayPicker, locationInput, timePicker]
   );
 
-  const report = useMemo(() => {
-    const upcomingDates = getUpcomingDates({dayOfWeek, count: 2});
-    return (
+  const upcomingDates = useMemo(
+    () => getUpcomingDates({dayOfWeek, count: 2}),
+    [dayOfWeek]
+  );
+
+  const report = useMemo(
+    () => (
       <div className="flex md:flex-row flex-col flex-wrap justify-center gap-10">
         {upcomingDates.map((date, i) => (
           <DailyWeather
-            key={date.toString()}
+            key={i}
             primary={i === 0}
             location={resolvedLocation}
             date={date}
@@ -111,8 +115,9 @@ export default function App() {
           />
         ))}
       </div>
-    );
-  }, [dayOfWeek, resolvedLocation, timeOfDay]);
+    ),
+    [resolvedLocation, timeOfDay, upcomingDates]
+  );
 
   return (
     <div className="flex flex-col m-2">
