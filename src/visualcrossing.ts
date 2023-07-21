@@ -22,18 +22,21 @@ if (API_KEY === undefined)
 
 const formatDateAPI = (date: Date): string => format(date, 'yyyy-MM-dd');
 
+// https://www.visualcrossing.com/resources/documentation/weather-api/timeline-weather-api/
 const getUrl = ({
   location,
   elements,
   include,
   startDay,
   endDay,
+  unitGroup = 'us',
 }: {
   location: string;
   elements?: string[];
   include?: string[];
   startDay?: Date;
   endDay?: Date;
+  unitGroup?: string;
 }): string => {
   const url = new URL(
     'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline'
@@ -45,6 +48,7 @@ const getUrl = ({
   }
   if (elements) url.searchParams.set('elements', elements.join(','));
   if (include) url.searchParams.set('include', include.join(','));
+  if (unitGroup) url.searchParams.set('unitGroup', unitGroup);
   url.searchParams.set('key', API_KEY);
   url.searchParams.set('contentType', 'json');
   return url.toString();
