@@ -4,10 +4,13 @@ import {
   differenceInCalendarDays,
   format,
   parse,
+  set,
   setDay,
   startOfDay,
   startOfWeek,
 } from 'date-fns';
+
+export type TimeOfDay = 'morning' | 'afternoon' | 'evening';
 
 // for mocking
 export const currentDate = (): Date => new Date();
@@ -59,4 +62,29 @@ export const getUpcomingDates = ({
   return Array.from({length: count}).map((_, i) =>
     startOfDay(addWeeks(startDate, i))
   );
+};
+
+export const timeOfDayToHourRange = (
+  timeOfDay: TimeOfDay
+): [number, number] => {
+  switch (timeOfDay) {
+    case 'morning':
+      return [8, 12];
+    case 'afternoon':
+      return [12, 17];
+    case 'evening':
+      return [17, 21];
+    default:
+      throw new Error(`Invalid time of day: ${timeOfDay}`);
+  }
+};
+
+export const hourOfToday = (hour: number): Date => {
+  const date = currentDate();
+  return set(date, {
+    hours: Math.max(0, Math.min(23, hour)),
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
 };

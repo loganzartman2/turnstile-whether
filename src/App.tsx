@@ -1,11 +1,11 @@
 import {useCallback, useMemo, useState} from 'react';
 import DailyWeather from './components/DailyWeather';
-import {getDayNames, getUpcomingDates} from './date-utils';
+import {TimeOfDay, getDayNames, getUpcomingDates} from './date-utils';
 import {fetchLocation} from './visualcrossing';
 
 export default function App() {
   const [dayOfWeek, setDayOfWeek] = useState<number>(5);
-  const [time, setTime] = useState<string>('Afternoon');
+  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>('afternoon');
   const [inputLocation, setInputLocation] = useState<string>('Seattle, WA');
   const [resolvedLocation, setResolvedLocation] =
     useState<string>(inputLocation);
@@ -70,14 +70,17 @@ export default function App() {
 
   const timePicker = useMemo(
     () => (
-      <select value={time} onChange={(e) => setTime(e.target.value)}>
-        <option>Morning</option>
-        <option>Afternoon</option>
-        <option>Evening</option>
-        <option>Night</option>
+      <select
+        value={timeOfDay}
+        onChange={(e) => setTimeOfDay(e.target.value as TimeOfDay)}
+        className="capitalize"
+      >
+        <option>morning</option>
+        <option>afternoon</option>
+        <option>evening</option>
       </select>
     ),
-    [time]
+    [timeOfDay]
   );
 
   const header = useMemo(
@@ -104,11 +107,12 @@ export default function App() {
             primary={i === 0}
             location={resolvedLocation}
             date={date}
+            timeOfDay={timeOfDay}
           />
         ))}
       </div>
     );
-  }, [dayOfWeek, resolvedLocation]);
+  }, [dayOfWeek, resolvedLocation, timeOfDay]);
 
   return (
     <div className="flex flex-col m-2">
