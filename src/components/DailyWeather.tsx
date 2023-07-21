@@ -30,35 +30,13 @@ import {
   formatPrecipitation,
 } from '@/conditions-utils';
 
-export default function DailyWeather({
-  primary,
-  location,
-  date,
+function Plot({
   timeOfDay,
+  weatherData,
 }: {
-  primary: boolean;
-  location: string;
-  date: Date;
   timeOfDay: TimeOfDay;
+  weatherData: any;
 }) {
-  const [loading, setLoading] = useState(true);
-  const [weatherData, setWeatherData] = useState<any>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    (async () => {
-      const response = await fetchDailyWeather({location, date});
-      if (response.ok) {
-        const json = await response.json();
-        console.log(json);
-        setWeatherData(json);
-        setLoading(false);
-      } else {
-        throw new Error(await response.text());
-      }
-    })();
-  }, [location, date]);
-
   const timeFormatter = useCallback((date: Date) => formatTime(date), []);
 
   const timeOfDayRange = useMemo(() => {
@@ -92,11 +70,7 @@ export default function DailyWeather({
       );
   }, [timeOfDayViewRange, weatherData?.days]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  const plot = (
+  return (
     <ResponsiveContainer width="100%" height="100%">
       <LineChart data={data}>
         <XAxis
@@ -161,6 +135,40 @@ export default function DailyWeather({
       </LineChart>
     </ResponsiveContainer>
   );
+}
+
+export default function DailyWeather({
+  primary,
+  location,
+  date,
+  timeOfDay,
+}: {
+  primary: boolean;
+  location: string;
+  date: Date;
+  timeOfDay: TimeOfDay;
+}) {
+  const [loading, setLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState<any>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    (async () => {
+      const response = await fetchDailyWeather({location, date});
+      if (response.ok) {
+        const json = await response.json();
+        console.log(json);
+        setWeatherData(json);
+        setLoading(false);
+      } else {
+        throw new Error(await response.text());
+      }
+    })();
+  }, [location, date]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   const dayData = weatherData.days[0];
   const conditionsIcon = getConditionsIcon(dayData.icon);
@@ -189,7 +197,9 @@ export default function DailyWeather({
           </div>
         </div>
       </div>
-      <div className="w-[450px] max-w-full h-[300px]">{plot}</div>
+      <div className="w-[450px] max-w-full h-[300px]">
+        <Plot timeOfDay={timeOfDay} weatherData={weatherData} />
+      </div>
     </div>
   );
 }
