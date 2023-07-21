@@ -106,7 +106,7 @@ export default function App() {
   const report = useMemo(
     () => (
       <div className="grid grid-cols-[1fr auto 1fr] grid-rows-[auto 1fr] bottom-0">
-        <div className="col-span-3 col-start-1 md:col-span-1 md:col-start-2 md:col-end-3 row-start-1 row-end-2 flex md:flex-row flex-col flex-wrap justify-center gap-10">
+        <div className="col-span-3 col-start-1 md:col-span-1 md:col-start-2 md:col-end-3 row-start-1 row-end-2 flex md:flex-row flex-col flex-wrap justify-center items-center gap-10">
           {upcomingDates.map((date, i) => (
             <DailyWeather
               key={i}
