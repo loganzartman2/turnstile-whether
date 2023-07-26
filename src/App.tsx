@@ -20,6 +20,7 @@ export default function App() {
           const json = await result.json();
           setResolvedLocation(json.resolvedAddress);
           setInputLocation(json.resolvedAddress);
+          setWeekOffset(0);
         } else {
           setResolvedLocation('');
           setInputLocation('');
