@@ -42,7 +42,7 @@ export default function App() {
     []
   );
 
-  const handleLocationKeyPres = useCallback(
+  const handleLocationKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         handleLocationBlur(e as any);
@@ -57,13 +57,13 @@ export default function App() {
         type="text"
         value={inputLocation}
         onChange={(e) => setInputLocation(e.target.value)}
-        onKeyDown={handleLocationKeyPres}
+        onKeyDown={handleLocationKeyPress}
         onBlur={handleLocationBlur}
         placeholder="Type a location"
         className=""
       />
     ),
-    [handleLocationBlur, inputLocation]
+    [handleLocationBlur, handleLocationKeyPress, inputLocation]
   );
 
   const dayPicker = useMemo(
