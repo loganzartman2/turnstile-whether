@@ -41,12 +41,22 @@ export default function App() {
     []
   );
 
+  const handleLocationKeyPres = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter') {
+        handleLocationBlur(e as any);
+      }
+    },
+    [handleLocationBlur]
+  );
+
   const locationInput = useMemo(
     () => (
       <input
         type="text"
         value={inputLocation}
         onChange={(e) => setInputLocation(e.target.value)}
+        onKeyDown={handleLocationKeyPres}
         onBlur={handleLocationBlur}
         placeholder="Type a location"
         className=""
