@@ -36,7 +36,7 @@ function Summary({weatherData}: {weatherData: any}) {
   const conditions = formatConditions(dayData.conditions, dayData.temp);
   const wind = formatWinds(dayData.windspeed);
   const precipIcon = getPrecipIcon(dayData.preciptype);
-  const precip = formatPrecipitation(dayData.precip, dayData.preciptype);
+  const precip = formatPrecipitation(dayData.precipprob, dayData.preciptype);
 
   return (
     <div className="flex flex-row items-center mb-6">
@@ -102,7 +102,6 @@ function Plot({
           minTickGap={10}
         />
         <YAxis yAxisId="mainAxis" />
-        <YAxis yAxisId="precipAxis" orientation="right" domain={[0, 0.5]} />
         <Tooltip
           animationDuration={200}
           allowEscapeViewBox={{x: true, y: true}}
@@ -146,10 +145,10 @@ function Plot({
         />
         <Line
           type="monotone"
-          dataKey="precip"
-          name="Precipitation (in)"
+          dataKey="precipprob"
+          name="Precipitation %"
           xAxisId="xAxis"
-          yAxisId="precipAxis"
+          yAxisId="mainAxis"
           dot={false}
           stroke={colors.blue[600]}
           strokeWidth={2}

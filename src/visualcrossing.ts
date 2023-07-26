@@ -82,6 +82,7 @@ export const fetchDailyWeather = async ({
         'humidity',
         'precip',
         'preciptype',
+        'precipprob',
         'windspeed',
         'conditions',
         'icon',

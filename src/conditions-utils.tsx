@@ -54,7 +54,7 @@ export const formatPrecipitation = (
   preciptype: string[] | null
 ): string => {
   if (preciptype) {
-    const amountStr = `${amount.toFixed(2)}"`;
+    const amountStr = `${amount.toFixed(0)}% chance`;
     const desc = [];
     if (preciptype.includes('freezingrain')) desc.push('freezing rain');
     if (preciptype.includes('ice')) desc.push('ice');
