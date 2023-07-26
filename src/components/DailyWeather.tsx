@@ -39,12 +39,12 @@ function Summary({weatherData}: {weatherData: any}) {
   const precip = formatPrecipitation(dayData.precipprob, dayData.preciptype);
 
   return (
-    <div className="flex flex-row items-center mb-6">
+    <div className="flex flex-row items-center mb-9">
       <div className="text-7xl mr-2">️{conditionsIcon}</div>
       <div className="flex flex-col">
-        <div className="text-xl">{conditions}</div>
-        <div className="text-lg">🌬️ {wind}</div>
-        <div className="text-lg">
+        <div className="text-xl mb-2">{conditions}</div>
+        <div className="text-[15px]">🌬️ {wind}</div>
+        <div className="text-[15px]">
           {precipIcon} {precip}
         </div>
       </div>
@@ -101,7 +101,7 @@ function Plot({
           tickFormatter={timeFormatter}
           minTickGap={10}
         />
-        <YAxis yAxisId="mainAxis" />
+        <YAxis yAxisId="mainAxis" domain={[0, 100]} />
         <Tooltip
           animationDuration={200}
           allowEscapeViewBox={{x: true, y: true}}
@@ -203,7 +203,7 @@ export default function DailyWeather({
     <div className="flex flex-col items-center w-[450px] max-w-full min-h-[452px]">
       <div
         className={clsx(
-          'mb-3 text-2xl font-semibold',
+          'mb-5 text-2xl font-semibold',
           primary && 'text-brandPrimary'
         )}
       >
