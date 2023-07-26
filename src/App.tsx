@@ -10,6 +10,7 @@ export default function App() {
   const [inputLocation, setInputLocation] = useState<string>('Seattle, WA');
   const [resolvedLocation, setResolvedLocation] =
     useState<string>(inputLocation);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleLocationBlur = useCallback((e: {target: {value: string}}) => {
     (async () => {
@@ -18,10 +19,14 @@ export default function App() {
         const result = await fetchLocation({location: newLocation});
         if (result.ok) {
           const json = await result.json();
+          setErrorMessage(null);
           setResolvedLocation(json.resolvedAddress);
           setInputLocation(json.resolvedAddress);
           setWeekOffset(0);
         } else {
+          setErrorMessage(
+            "We couldn't find that location. Please enter an address, partial address, or zip code."
+          );
           setResolvedLocation('');
           setInputLocation('');
         }
@@ -114,43 +119,48 @@ export default function App() {
     [dayOfWeek, weekOffset]
   );
 
-  const report = useMemo(
-    () => (
-      <div className="grid grid-cols-[1fr auto 1fr] grid-rows-[auto 1fr] bottom-0">
-        <div className="col-span-3 col-start-1 md:col-span-1 md:col-start-2 md:col-end-3 row-start-1 row-end-2 flex md:flex-row flex-col flex-wrap justify-center items-center gap-10">
-          {upcomingDates.map((date, i) => (
-            <DailyWeather
-              key={i}
-              primary={i + weekOffset === 0}
-              location={resolvedLocation}
-              date={date}
-              timeOfDay={timeOfDay}
-            />
-          ))}
+  const report = useMemo(() => {
+    if (errorMessage === null) {
+      return (
+        <div className="grid grid-cols-[1fr auto 1fr] grid-rows-[auto 1fr] bottom-0">
+          <div className="col-span-3 col-start-1 md:col-span-1 md:col-start-2 md:col-end-3 row-start-1 row-end-2 flex md:flex-row flex-col flex-wrap justify-center items-center gap-10">
+            {upcomingDates.map((date, i) => (
+              <DailyWeather
+                key={i}
+                primary={i + weekOffset === 0}
+                location={resolvedLocation}
+                date={date}
+                timeOfDay={timeOfDay}
+              />
+            ))}
+          </div>
+          <button
+            onClick={() => setWeekOffset((o) => Math.max(0, o - 1))}
+            className="fixed bottom-0 left-0 right-[50%] h-16 bg-white md:h-auto md:bg-none md:relative md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2 text-2xl"
+          >
+            ❮
+          </button>
+          <button
+            onClick={() => setWeekOffset((o) => o + 1)}
+            className="fixed bottom-0 left-[50%] right-0 h-16 bg-white md:h-auto md:bg-none md:relative md:col-start-3 md:col-end-4 md:row-start-1 md:row-end-2 text-2xl"
+          >
+            ❯
+          </button>
         </div>
-        <button
-          onClick={() => setWeekOffset((o) => Math.max(0, o - 1))}
-          className="fixed bottom-0 left-0 right-[50%] h-16 bg-white md:h-auto md:bg-none md:relative md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2 text-2xl"
-        >
-          ❮
-        </button>
-        <button
-          onClick={() => setWeekOffset((o) => o + 1)}
-          className="fixed bottom-0 left-[50%] right-0 h-16 bg-white md:h-auto md:bg-none md:relative md:col-start-3 md:col-end-4 md:row-start-1 md:row-end-2 text-2xl"
-        >
-          ❯
-        </button>
-      </div>
-    ),
-    [resolvedLocation, timeOfDay, upcomingDates, weekOffset]
-  );
+      );
+    } else {
+      return (
+        <div className="p-8 bg-slate-200 text-slate-900">{errorMessage}</div>
+      );
+    }
+  }, [errorMessage, resolvedLocation, timeOfDay, upcomingDates, weekOffset]);
 
   return (
     <div className="flex flex-col m-2">
       {topbar}
       <div className="w-[1000px] max-w-full m-auto pb-16">
         {header}
-        {resolvedLocation && report}
+        {report}
       </div>
     </div>
   );
